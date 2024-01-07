@@ -15,11 +15,20 @@ namespace TodoMVC.Controllers
 
         public IActionResult Index()
         {
+            ViewData["learnAbout"] = "Learn about";
+            ViewData["homeBodyText"] = "building Web apps with ASP.NET Core.";
             return View();
         }
 
         public IActionResult Privacy()
         {
+            ViewData["privacyBodyText"] = "Use this page to detail your site's privacy policy.";
+            return View();
+        }
+
+        public IActionResult About()
+        {
+            ViewData["aboutBodyText"] = "This is the About page.";
             return View();
         }
 
