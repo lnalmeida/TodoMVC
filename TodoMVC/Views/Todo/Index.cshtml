@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "To Do List";
+
+    
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -16,10 +18,10 @@
                 <strong>#</strong>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+               Title
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                Description
             </th>
             <th>
                Date
@@ -31,23 +33,23 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var todo in Model) {
         <tr>
             <td>
-                <strong>@Html.DisplayFor(modelItem => item.Id) </strong>
+                <strong>@todo.Id</strong>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Title)
+                @todo.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                @todo.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate.Date)
+                @todo.CreatedDate.Date.ToString("dd-MM-yyyy")
             </td>
             <td>
                 <div>
-                    @if (item.IsCompleted)
+                    @if (todo.IsCompleted)
                     {
                         <span class="badge textwhite bg-success">Completed</span>
                     }
@@ -58,9 +60,18 @@
                 </div>
             </td>
             <td>
-                <a class="btn btn-sm btn-primary fw-bold" asp-action="Details" asp-route-id="@item.Id">Details</a> 
-                <a class="btn btn-sm btn-warning fw-bold" asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
-                <a class="btn btn-sm btn-danger fw-bold" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a class="btn btn-sm btn-primary fw-bold" asp-action="Details" asp-route-id="@todo.Id">
+                    <i data-feather="menu"></i>
+                    Details
+                </a> 
+                <a class="btn btn-sm btn-warning fw-bold" asp-action="Edit" asp-route-id="@todo.Id">
+                        <i data-feather="edit-2"></i>
+                    Edit
+                </a> 
+                <a class="btn btn-sm btn-danger fw-bold" asp-action="Delete" asp-route-id="@todo.Id">
+                        <i data-feather="trash-2"></i>
+                    Delete
+                </a>
             </td>
         </tr>
 }
