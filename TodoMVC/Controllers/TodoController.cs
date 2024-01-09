@@ -43,7 +43,9 @@ namespace TodoMVC.Controllers
 
         public IActionResult Create()
         {
-             return View();
+            ViewData["Title"] = "Insert a new To Do";
+            ViewData["BtnLabel"] = "Create";
+            return View("Form");
         }
 
         [HttpPost]
@@ -55,9 +57,11 @@ namespace TodoMVC.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
+            ViewData["Title"] = "Edit a To Do";
+            ViewData["BtnLabel"] = "Save";
             var todo = await _repository.GetById(id);
             if (todo == null) return NotFound();
-            return View(todo);
+            return View("Form", todo);
         }
 
         [HttpPost]

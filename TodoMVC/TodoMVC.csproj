@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <Content Remove="Views\Todo\Delete.cshtml" />
+    <Content Remove="Views\Todo\Edit.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,10 +1,6 @@
 ﻿@model TodoMVC.Models.Todo
 
-@{
-    ViewData["Title"] = "Create a new to do";
-}
-
-<h1>Create a New To Do</h1>
+<h1>@ViewData["Title"]</h1>
 
 <h4>Todo</h4>
 <hr />
@@ -35,7 +31,7 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col">
-                        <input type="submit" value="Create" class="btn btn-md btn-primary px-4"/>
+                        <input type="submit" value=@ViewData["BtnLabel"] class="btn btn-md btn-primary px-4"/>
                     </div>
                     <div class="col d-flex align-items-start">
                         <a class="btn btn-md btn-danger px-4 " asp-action="Index">Cancel</a>
