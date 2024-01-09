@@ -1,0 +1,59 @@
+﻿@model IEnumerable<TodoMVC.Models.Todo>
+
+@{
+    ViewData["Title"] = "To Do List";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a class="btn btn-sm btn-primary" asp-action="Create">Create New To Do</a>
+</p>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th class="col-sm-2">
+                <strong>#</strong>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+               Date
+            </th>
+            <th>
+               Completed?
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <strong>@Html.DisplayFor(modelItem => item.Id) </strong>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsCompleted)
+            </td>
+            <td>
+                <a class="btn btn-sm btn-success" asp-action="Details" asp-route-id="@item.Id">Details</a> 
+                <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
+                <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -11,13 +11,7 @@ namespace TodoMVC.Models
         public DateTime CreatedDate { get; set; }  = DateTime.Now.Date;
         public bool IsCompleted { get; set; }
 
-        public Todo(string title, string description, DateTime createdDate, bool isCompleted = false)
-        {
-            Title = title;
-            Description = description;
-            CreatedDate = createdDate;
-            this.IsCompleted = isCompleted;
-        }
+        public Todo() {}
 
         public Todo(int id, string title, string description, DateTime createdDate, bool isCompleted = false)
         {
@@ -25,7 +19,7 @@ namespace TodoMVC.Models
             Title = title;
             Description = description;
             CreatedDate = createdDate;
-            this.IsCompleted = isCompleted;
+            IsCompleted = isCompleted;
         }
     }
 }

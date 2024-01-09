@@ -1,52 +1,95 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections;
+using System.Runtime.CompilerServices;
 using TodoMVC.Contexts;
 using TodoMVC.Models;
 
 namespace TodoMVC.Repository;
 
-public class TodoRepository : IRepository<Todo>
+public class TodoRepository : IRepository<Todo> 
 {
     private readonly AppDbContext _context;
     public TodoRepository(AppDbContext context)
     {
         _context = context;
     }
-    public void Add(Todo entity)
+    public async Task<IEnumerable<Todo>> GetAll()
     {
-         _context.AddAsync(entity);
-        _context.SaveChanges();
-    }
-
-    public void Delete(int id)
-    {
-         _context.Remove(id);
-        _context.SaveChanges();
-    }
-
-    public IEnumerable<Todo> Get()
-    {
-        return _context.Todos.ToList();
-    }
-
-    public  Todo GetById(int? id)
-    {
-        if(id != null)
+        try
         {
-            return _context.Todos.FirstOrDefault(x => x.Id ==id);
+            var todos = await _context.Todos.AsNoTracking().ToListAsync();
+        
+            if(todos != null)
+            {
+                return todos;
+            }
+
+            return null;
+        } catch (Exception ex)
+        {
+            throw new Exception($"An error ocurred on search data. Details: {ex.Message}");
         }
-        return null;
+    }
+    public async Task<Todo> GetById(int id)
+    {
+        try
+        {
+            var todo = await _context.Todos.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            if(todo != null)
+            {
+                return todo;
+            }
+            return null;
+        } catch(Exception ex)
+        {
+            throw new Exception($"An error ocurred on search data. Details: {ex.Message}");
+        }
     }
 
-    public Todo Update(Todo entity, int id)
+    public async Task Add(Todo todo)
     {
-        var existingTodo = _context.Todos.FirstOrDefault(x => x.Id == id);
-        if (existingTodo != null)
+        try
         {
-            _context.Entry(existingTodo).CurrentValues.SetValues(entity);
-            _context.SaveChanges();
-            return entity;
+            _context.Add(todo);
+            await _context.SaveChangesAsync();
+        } catch (Exception ex)
+        {
+            throw new Exception($"An error ocurred on save data. Details: {ex.Message}");
         }
+    }
 
-        return null;
+    public async Task Delete(int id)
+    {
+        try
+        {
+            var existingTodo = _context.Todos.FirstOrDefault(x => x.Id == id);
+            if (existingTodo != null)
+            {
+                _context.Remove(existingTodo);
+                await _context.SaveChangesAsync();
+            } 
+
+        } catch (Exception ex) 
+        {
+           throw new Exception($"An error ocurred on delete data. Details: {ex.Message}");
+        }
+    }
+
+    public async Task Update(int id, Todo todo)
+    {
+        try
+        {
+            var existingTodo = await _context.Todos.FindAsync(id);
+            if (existingTodo != null)
+            {
+                _context.Entry(existingTodo).CurrentValues.SetValues(todo);
+                await _context.SaveChangesAsync();
+            }
+
+        } catch (Exception ex)
+        {
+            throw new Exception($"An error ocurred on update data. Details: {ex.Message}");
+        }
     }
 }

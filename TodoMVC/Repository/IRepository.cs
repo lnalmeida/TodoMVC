@@ -1,11 +1,13 @@
-﻿namespace TodoMVC.Repository
+﻿using TodoMVC.Models;
+
+namespace TodoMVC.Repository
 {
-    public interface IRepository<T>
+    public interface IRepository<T> where T : class
     {
-        public IEnumerable<T> Get();
-        public T GetById(int? id);
-        public void  Add(T entity);
-        public T Update(T entity, int id);
-        public void Delete(int id);
+        public Task<IEnumerable<T>> GetAll();
+        public Task<T> GetById(int id);
+        public Task Add(T entity);
+        public Task Update(int id, T entity);
+        public  Task Delete(int id);
     }
 }
