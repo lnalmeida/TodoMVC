@@ -18,13 +18,8 @@ public class TodoRepository : IRepository<Todo>
     {
         try
         {
-            var todos = await _context.Todos.AsNoTracking().ToListAsync();
-        
-            if(todos != null)
-            {
-                return todos;
-            }
-
+            var todos = await _context.Todos.AsNoTracking().ToListAsync(); 
+            if (todos != null) return todos;
             return null;
         } catch (Exception ex)
         {
@@ -35,12 +30,8 @@ public class TodoRepository : IRepository<Todo>
     {
         try
         {
-            var todo = await _context.Todos.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-            if(todo != null)
-            {
-                return todo;
-            }
-            return null;
+            var todo = await _context.Todos.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id); 
+            return todo;
         } catch(Exception ex)
         {
             throw new Exception($"An error ocurred on search data. Details: {ex.Message}");

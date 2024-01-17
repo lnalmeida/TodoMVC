@@ -25,9 +25,12 @@ namespace TodoMVC.Controllers
         {
             var todos = await _repository.GetAll();
             ViewData["Title"] = "Task List";
-            return todos != null ? 
-                          View(todos) :
-                          Problem("No Data to show.");
+            if (todos != null)
+            {
+                return View(todos);
+            }
+            
+            return Problem("No data to show");
         }
 
         public async Task<IActionResult> Details(int id)
