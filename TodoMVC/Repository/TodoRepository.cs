@@ -4,6 +4,7 @@ using System.Collections;
 using System.Runtime.CompilerServices;
 using TodoMVC.Contexts;
 using TodoMVC.Models;
+using X.PagedList;
 
 namespace TodoMVC.Repository;
 
@@ -14,13 +15,12 @@ public class TodoRepository : IRepository<Todo>
     {
         _context = context;
     }
-    public async Task<IEnumerable<Todo>> GetAll()
+    public async Task<IPagedList<Todo>> GetAllPaged(int pageNumber, int pageSize)
     {
         try
         {
-            var todos = await _context.Todos.AsNoTracking().ToListAsync(); 
-            if (todos != null) return todos;
-            return null;
+            var todos = await _context.Todos.AsNoTracking().OrderByDescending(x => x.IsCompleted).ToPagedListAsync(pageNumber, pageSize); 
+            return todos;
         } catch (Exception ex)
         {
             throw new Exception($"An error ocurred on search data. Details: {ex.Message}");
@@ -30,7 +30,8 @@ public class TodoRepository : IRepository<Todo>
     {
         try
         {
-            var todo = await _context.Todos.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id); 
+            var todo = await _context.Todos.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            if (todo == null) return null;
             return todo;
         } catch(Exception ex)
         {
@@ -64,6 +65,16 @@ public class TodoRepository : IRepository<Todo>
         } catch (Exception ex) 
         {
            throw new Exception($"An error ocurred on delete data. Details: {ex.Message}");
+        }
+    }
+
+    public async Task CompleteToDo(int id)
+    {
+        var todo = await _context.Todos.FindAsync(id);
+        if (todo != null)
+        {
+            todo.IsCompleted = true;
+            await _context.SaveChangesAsync();
         }
     }
 

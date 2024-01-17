@@ -1,4 +1,7 @@
-﻿@model IEnumerable<TodoMVC.Models.Todo>
+﻿@using X.PagedList.Web.Common
+@using X.PagedList.Mvc.Core
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model X.PagedList.IPagedList<TodoMVC.Models.Todo>
 
 @{
     ViewData["Title"] = "To Do List";
@@ -13,36 +16,36 @@
 </p>
 <table class="table table-hover">
     <thead>
-        <tr>
-            <th class="col-sm-2">
-                <strong>#</strong>
-            </th>
-            <th>
-               Title
-            </th>
-            <th>
-                Description
-            </th>
-            <th>
-               Date
-            </th>
-            <th>
-               Completed?
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th class="col-sm-2">
+            <strong>#</strong>
+        </th>
+        <th>
+            Title
+        </th>
+        <th>
+            Description
+        </th>
+        <th>
+            Date
+        </th>
+        <th>
+            Completed?
+        </th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-@foreach (var todo in Model) {
+    @foreach (var todo in Model) {
         <tr>
             <td>
                 <strong>@todo.Id</strong>
             </td>
             <td>
-                @todo.Title)
+                @todo.Title
             </td>
             <td>
-                @todo.Description)
+                @todo.Description
             </td>
             <td>
                 @todo.CreatedDate.Date.ToString("dd-MM-yyyy")
@@ -59,21 +62,103 @@
                     }
                 </div>
             </td>
-            <td>
+            <td style="margin-left: 2rem">
+                @if (todo.IsCompleted)
+                {
+                    <a class="btn btn-sm  disabled btn-success fw-bold" asp-action="Done" asp-route-id="@todo.Id">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Done
+                    </a>
+                }
+                else
+                {
+                    <a class="btn btn-sm btn-success fw-bold" data-bs-toggle="modal" data-bs-target="#confirmDoneModal-@todo.Id">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Done
+                    </a>
+                    
+                    <div class="modal fade" id="confirmDoneModal-@todo.Id" tabindex="-1" aria-labelledby="confirmDoneModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="confirmDoneModalLabel">Confirm Done</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to mark this task as done?  This action cannot be reversed.
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <a class="btn btn-success" asp-action="Done" asp-route-id="@todo.Id"> 
+                                        Confirm Done
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
                 <a class="btn btn-sm btn-primary fw-bold" asp-action="Details" asp-route-id="@todo.Id">
-                    <i data-feather="menu"></i>
+                    <i class="fa-solid fa-circle-info"></i>
                     Details
-                </a> 
-                <a class="btn btn-sm btn-warning fw-bold" asp-action="Edit" asp-route-id="@todo.Id">
-                        <i data-feather="edit-2"></i>
-                    Edit
-                </a> 
-                <a class="btn btn-sm btn-danger fw-bold" asp-action="Delete" asp-route-id="@todo.Id">
-                        <i data-feather="trash-2"></i>
+                </a>
+                @if (todo.IsCompleted)
+                {
+                    <a class="btn btn-sm disabled fw-bold" style="color: white; background: #de4f15;" asp-action="Edit" asp-route-id="@todo.Id">
+                        <i class="fa-solid fa-pencil"></i>
+                        Edit
+                    </a>
+                }
+                else
+                {
+                    <a class="btn btn-sm fw-bold" style="color: white; background: #de4f15;" asp-action="Edit" asp-route-id="@todo.Id">
+                        <i class="fa-solid fa-pencil"></i>
+                        Edit
+                    </a>
+                }
+                <a class="btn btn-sm fw-bold" style="background: #ce0a31; color: white;" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@todo.Id">
+                    <i class="fa-solid fa-trash-can"></i>
                     Delete
                 </a>
+                
+                <div class="modal fade" id="confirmDeleteModal-@todo.Id" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete this task? This action cannot be reversed.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@todo.Id"> <!-- Substitua pela sua rota real -->
+                                    Confirm Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </td>
         </tr>
-}
+    }
     </tbody>
 </table>
+<nav>
+    <ul class="pagination justify-content-center">
+        <li class="page-item @((Model.PageNumber == 1) ? "disabled" : "")">
+            <a class="page-link" href="@Url.Action("Index", new { page = Model.PageNumber - 1 })" tabindex="-1">Previous</a>
+        </li>
+
+        @for (int i = 1; i <= Model.PageCount; i++)
+        {
+            <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+            </li>
+        }
+
+        <li class="page-item @(Model.PageNumber == Model.PageCount ? "disabled" : "")">
+            <a class="page-link" href="@Url.Action("Index", new { page = Model.PageNumber + 1 })">Next</a>
+        </li>
+    </ul>
+</nav>

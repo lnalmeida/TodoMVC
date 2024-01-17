@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TodoMVC.Contexts;
+using X.PagedList;
 using TodoMVC.Models;
 using TodoMVC.Repository;
 
@@ -21,16 +22,24 @@ namespace TodoMVC.Controllers
             _repository = repository;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index( int? page)
         {
-            var todos = await _repository.GetAll();
+            int pageNumber = page ?? 1;
+            int pageSize = 10;
+            var todosPaged = await _repository.GetAllPaged(pageNumber, pageSize);
             ViewData["Title"] = "Task List";
-            if (todos != null)
+            if (todosPaged != null)
             {
-                return View(todos);
+                return View(todosPaged);
             }
             
             return Problem("No data to show");
+        }
+
+        public async Task<IActionResult> Done(int id)
+        {
+            await _repository.CompleteToDo(id);
+            return RedirectToAction(nameof(Index));;
         }
 
         public async Task<IActionResult> Details(int id)
