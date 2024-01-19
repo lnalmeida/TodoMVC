@@ -3,11 +3,14 @@
 O ToDoMVC é um aplicativo web simples para gerenciamento de tarefas, onde os usuários podem adicionar, editar, excluir e marcar tarefas como concluídas. Feito como projeto pessoal, para efeito de treino, ainda virão outras features ainda não pensadas 😄😄😄
 
 ## Pré-requisitos
+* [.NET framework 6.0](https://dotnet.microsoft.com/pt-br/download/dotnet/6.0) ou superior
+* [MS-SQL Server 2022](https://www.microsoft.com/en-us/sql-server/sql-server-downloads/)
 
-- [ASP.NET Core](https://dotnet.microsoft.com/download) 3.1 ou superior
-- [Node.js](https://nodejs.org/) e [npm](https://www.npmjs.com/) (para instalação de pacotes front-end)
-- [SQL Server](https://www.microsoft.com/sql-server) (ou outro banco de dados suportado pelo EF Core)
+## Tecnologias utilizadas
 
+* ASP.NET Core e MVC
+* Razor
+* MS-SQL Server 2022
 ## Configuração do Ambiente
 
 1. **Clone este repositório:**
